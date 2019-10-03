@@ -1,16 +1,30 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using MyDailies.Data;
 using MyDailies.Data.Entities;
+using static MyDailies.Controllers.RatingData;
 
 namespace MyDailies.Controllers
 {
     public class RatingData
     {
-        public IList<DailyRating> Ratings { get; set; }
+        public class RatingDay
+        {
+            public string Date { get; set; }
+            public IEnumerable<RatingMetric> Metrics { get; set; }
+        }
+
+        public class RatingMetric
+        {
+            public string Metric { get; set; }
+            public int Rating { get; set; } 
+            public string Notes { get; set; }
+        }
+
+        public RatingDay Ratings { get; set; }
     }
 
     [ApiController]
@@ -25,17 +39,25 @@ namespace MyDailies.Controllers
         }
 
         [HttpGet]
-        public RatingData Get()
+        public RatingDay Get(string date)
         {
-            var data = _dbContext.DailyRatings
+            var groups = _dbContext.DailyRatings
                 .Include(x => x.Metric)
-                .OrderByDescending(x => x.RatingDate)
+                .Where(x => x.RatingDate == date)
                 .ToList();
 
-            return new RatingData
+            var day = new RatingDay
             {
-                Ratings = data
+                Date = date,
+                Metrics = groups.Select(r => new RatingMetric
+                {
+                    Metric = r.Metric.Name,
+                    Rating = r.Rating,
+                    Notes = r.Notes
+                }).ToList()
             };
+
+            return day;
         }
     }
 }

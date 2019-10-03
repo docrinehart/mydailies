@@ -5,7 +5,7 @@ namespace MyDailies.Data.Entities
 {
     public class DailyRating
     {
-        public DateTime RatingDate { get; set; }
+        public string RatingDate { get; set; }
 
         public int MetricId { get; set; }
 

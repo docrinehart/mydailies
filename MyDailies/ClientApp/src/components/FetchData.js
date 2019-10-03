@@ -1,11 +1,17 @@
 import React, { Component } from 'react';
 
+const RatingDay = ({ props }) => (
+  <div>
+    <h3>{props.ratingDate}</h3>
+  </div>
+);
+
 export class FetchData extends Component {
   static displayName = FetchData.name;
 
   constructor(props) {
     super(props);
-    this.state = { ratings: [], loading: true };
+    this.state = { rating: { date: '', metrics: [] }, loading: true };
   }
 
   componentDidMount() {
@@ -15,9 +21,12 @@ export class FetchData extends Component {
   render() {
     let contents = this.state.loading
       ? <p><em>Loading...</em></p>
-      : <ul>
-          {this.state.ratings.map(rating => <li>{JSON.stringify(rating)}</li>)}
-        </ul>;
+      : <div>
+          <h3>{this.state.rating.date}</h3>
+          <ul>
+            {this.state.rating.metrics.map(rating => <li>{JSON.stringify(rating)}</li>)}
+          </ul>
+        </div>;
 
     return (
       <div>
@@ -29,8 +38,8 @@ export class FetchData extends Component {
   }
 
   async populateRatings() {
-    const response = await fetch('ratings');
+    const response = await fetch('ratings?date=2019-09-29');
     const data = await response.json();
-    this.setState({ ratings: data.ratings, loading: false });
+    this.setState({ rating: data, loading: false });
   }
 }
