@@ -13,6 +13,3 @@ ReactDOM.render(
     <App />
   </BrowserRouter>,
   rootElement);
-
-// registerServiceWorker();
-
