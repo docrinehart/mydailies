@@ -12,3 +12,9 @@ code {
   background-color: #1b6ec2;
   border-color: #1861ac;
 }
+
+th, td {
+  padding: 5px 15px;
+  vertical-align: top;
+  border-bottom: 1px solid black;
+}
